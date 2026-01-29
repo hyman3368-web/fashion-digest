@@ -185,6 +185,27 @@ body {
   position: relative;
 }
 
+.article-image {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(201, 169, 98, 0.1) 0%, rgba(201, 169, 98, 0.05) 100%);
+}
+
+.article-image img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.article-card:hover .article-image img {
+  transform: scale(1.02);
+}
+
 .article-card::before {
   content: '';
   position: absolute;
@@ -488,8 +509,25 @@ function generateArticleCard(article: Article, category: any): string {
     ? `<div class="article-tags">${article.tags.map(tag => `<span>#${tag}</span>`).join('')}</div>`
     : '';
 
+  // 为每篇文章添加时尚配图
+  const fashionImages = [
+    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80', // Fashion runway
+    'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80', // Fashion model
+    'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&q=80', // Fashion design
+    'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&q=80', // Luxury fashion
+    'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&q=80', // Fashion photography
+    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80'  // Fashion week
+  ];
+  const imageIndex = Math.abs(article.titleCN.split('').reduce((acc, char, idx) => {
+    return acc + char.charCodeAt(0);
+  }, 0)) % fashionImages.length;
+  const imageUrl = fashionImages[imageIndex];
+
   return `
   <article class="article-card">
+    <div class="article-image">
+      <img src="${imageUrl}" alt="${article.titleCN}" loading="lazy">
+    </div>
     <div class="article-header">
       <div>
         <h3 class="article-title">${article.titleCN}</h3>
@@ -526,12 +564,7 @@ function generateFooter(digest: MonthlyDigest): string {
   <footer class="footer">
     <div class="footer-content">
       <p>本简报内容来源于国际权威时尚媒体，包括Business of Fashion、Vogue Runway、WWD等。</p>
-      <p>所有翻译均保留专业术语，确保准确性。内容仅供个人学习参考。</p>
-    </div>
-    <div class="footer-credits">
-      <p>Generated with Claude Code via Happy</p>
-      <p>https://github.com/ruvnet/claude-flow</p>
-      <p>${new Date().toISOString()}</p>
+      <p>霖霖子时尚工作室</p>
     </div>
   </footer>
 `;

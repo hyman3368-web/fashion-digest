@@ -20,7 +20,7 @@ export class PremiumDigestGenerator {
   async generate(): Promise<MonthlyDigest> {
     const articles = this.getArticles();
     const digest: MonthlyDigest = {
-      titleCN: `时尚品牌简报 · ${this.formatMonth(this.month)}`,
+      titleCN: '时尚简报·第1期',
       subtitle: 'Luxury Fashion Digest',
       date: new Date().toISOString().split('T')[0],
       month: this.month,
