@@ -1,0 +1,538 @@
+/**
+ * 高级时尚简报HTML模板 - 6分类专业版
+ * 30年时尚编辑视角，50-100字深度内容
+ * 黑金配色，Vogue/BOF调性
+ * 无图片依赖，纯文字排版
+ */
+
+import { MonthlyDigest, Article } from '../types/index.js';
+import { PREMIUM_CATEGORIES, getPremiumCategoryConfig } from '../config/categories-premium.js';
+import { FASHION_COLORS } from '../config/categories.js';
+
+/**
+ * 生成完整HTML
+ */
+export function generatePremiumHTML(digest: MonthlyDigest): string {
+  return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${digest.titleCN}</title>
+  <meta name="description" content="${digest.titleCN} - 高级时尚品牌简报，聚焦高定品牌与奢侈时装屋">
+  <style>
+    ${generateCSS()}
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    ${generateHeader(digest)}
+    ${generateHeroSection(digest)}
+    ${generateCategories(digest)}
+    ${generateFooter(digest)}
+  </div>
+</body>
+</html>`;
+}
+
+/**
+ * 生成CSS样式
+ */
+function generateCSS(): string {
+  return `
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary: ${FASHION_COLORS.primary};
+  --secondary: ${FASHION_COLORS.secondary};
+  --accent: ${FASHION_COLORS.accent};
+  --background: ${FASHION_COLORS.background};
+  --text: ${FASHION_COLORS.text};
+  --text-light: ${FASHION_COLORS.textLight};
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Noto Serif SC', Georgia, 'Times New Roman', serif;
+  background: var(--background);
+  color: var(--text);
+  line-height: 1.9;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.page-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  box-shadow: 0 0 60px rgba(0,0,0,0.06);
+}
+
+/* ============ HEADER ============ */
+.header {
+  background: linear-gradient(135deg, var(--primary) 0%, #1a1a1a 100%);
+  color: var(--accent);
+  padding: 4rem 3rem;
+  text-align: center;
+  border-bottom: 3px solid var(--accent);
+}
+
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.header .subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.header .date {
+  margin-top: 1.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  opacity: 0.7;
+  letter-spacing: 1px;
+}
+
+/* ============ HERO ============ */
+.hero {
+  padding: 5rem 3rem;
+  background: linear-gradient(180deg, #fff 0%, var(--background) 100%);
+  text-align: center;
+}
+
+.hero-tagline {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.hero-description {
+  max-width: 600px;
+  margin: 0 auto;
+  color: var(--text-light);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+/* ============ CATEGORIES ============ */
+.categories {
+  padding: 4rem 3rem;
+}
+
+.category-section {
+  margin-bottom: 5rem;
+}
+
+.category-header {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--accent);
+}
+
+.category-icon {
+  font-size: 1.8rem;
+  margin-right: 0.8rem;
+}
+
+.category-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--primary);
+  font-weight: 600;
+  margin-right: 1rem;
+}
+
+.category-name-en {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  font-style: italic;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 1px;
+}
+
+/* ============ ARTICLES ============ */
+.articles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.article-card {
+  background: #fff;
+  padding: 2.5rem;
+  border-left: 3px solid var(--accent);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.article-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(201, 169, 98, 0.03) 0%, rgba(201, 169, 98, 0) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.article-card:hover {
+  border-left-color: var(--primary);
+  transform: translateX(4px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.article-card:hover::before {
+  opacity: 1;
+}
+
+.article-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.article-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: var(--primary);
+  font-weight: 600;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.article-title-en {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  font-style: italic;
+  margin-top: 0.3rem;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.article-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+  font-size: 0.8rem;
+  color: var(--text-light);
+  font-family: 'Inter', sans-serif;
+}
+
+.article-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.article-source {
+  background: var(--background);
+  padding: 0.3rem 0.8rem;
+  border-radius: 3px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.article-date {
+  opacity: 0.7;
+}
+
+.article-content {
+  color: var(--text);
+  line-height: 2;
+  font-size: 1rem;
+  text-align: justify;
+}
+
+.article-brands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+}
+
+.brand-tag {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: var(--accent);
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.article-footer {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(201, 169, 98, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--text-light);
+  font-family: 'Inter', sans-serif;
+}
+
+.article-tags {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.article-tags span {
+  background: var(--background);
+  padding: 0.3rem 0.7rem;
+  border-radius: 3px;
+  font-style: italic;
+}
+
+.article-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.article-link:hover {
+  color: var(--primary);
+}
+
+/* ============ FOOTER ============ */
+.footer {
+  background: var(--primary);
+  color: var(--text-light);
+  padding: 3rem;
+  text-align: center;
+  border-top: 3px solid var(--accent);
+}
+
+.footer-content {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.8;
+  opacity: 0.8;
+}
+
+.footer-credits {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(201, 169, 98, 0.2);
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .header {
+    padding: 3rem 2rem;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  .hero {
+    padding: 3rem 2rem;
+  }
+
+  .categories {
+    padding: 3rem 2rem;
+  }
+
+  .category-section {
+    margin-bottom: 4rem;
+  }
+
+  .article-card {
+    padding: 2rem;
+  }
+
+  .article-title {
+    font-size: 1.2rem;
+  }
+
+  .article-content {
+    font-size: 0.95rem;
+  }
+}
+
+@media print {
+  .header {
+    background: #fff;
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+  }
+
+  .article-card {
+    page-break-inside: avoid;
+  }
+}
+`;
+}
+
+/**
+ * 生成头部
+ */
+function generateHeader(digest: MonthlyDigest): string {
+  return `
+  <header class="header">
+    <h1>${digest.titleCN}</h1>
+    <div class="subtitle">${digest.subtitle}</div>
+    <div class="date">${digest.date}</div>
+  </header>
+`;
+}
+
+/**
+ * 生成Hero区域
+ */
+function generateHeroSection(digest: MonthlyDigest): string {
+  return `
+  <section class="hero">
+    <div class="hero-tagline">聚焦高定品牌 · 深度行业洞察</div>
+    <div class="hero-description">
+      本期精选6大核心分类，覆盖高级定制、时装屋传承、市场动态、创意力量、工艺创新与趋势情报。
+      每篇内容50-100字，数据支撑，观点独立。
+    </div>
+  </section>
+`;
+}
+
+/**
+ * 生成分类内容
+ */
+function generateCategories(digest: MonthlyDigest): string {
+  const categoriesByArticle = new Map<string, Article[]>();
+
+  // 按分类组织文章
+  for (const category of PREMIUM_CATEGORIES) {
+    categoriesByArticle.set(category.id, []);
+  }
+
+  for (const article of digest.articles) {
+    const categoryArticles = categoriesByArticle.get(article.category);
+    if (categoryArticles) {
+      categoryArticles.push(article);
+    }
+  }
+
+  // 生成HTML
+  let html = '<section class="categories">';
+
+  for (const category of PREMIUM_CATEGORIES) {
+    const articles = categoriesByArticle.get(category.id) || [];
+
+    if (articles.length === 0) continue;
+
+    const categoryConfig = getPremiumCategoryConfig(category.id);
+    if (!categoryConfig) continue;
+
+    html += `
+  <div class="category-section">
+    <div class="category-header">
+      <span class="category-icon">${categoryConfig.icon}</span>
+      <h2 class="category-title">${categoryConfig.nameCN}</h2>
+      <span class="category-name-en">${categoryConfig.name}</span>
+    </div>
+    <div class="articles-list">
+    `;
+
+    for (const article of articles) {
+      html += generateArticleCard(article, categoryConfig);
+    }
+
+    html += `
+    </div>
+  </div>
+    `;
+  }
+
+  html += '</section>';
+  return html;
+}
+
+/**
+ * 生成文章卡片
+ */
+function generateArticleCard(article: Article, category: any): string {
+  const brandsHTML = article.brands && article.brands.length > 0
+    ? article.brands.map(brand => `<span class="brand-tag">${brand}</span>`).join('')
+    : '';
+
+  const tagsHTML = article.tags && article.tags.length > 0
+    ? `<div class="article-tags">${article.tags.map(tag => `<span>#${tag}</span>`).join('')}</div>`
+    : '';
+
+  return `
+  <article class="article-card">
+    <div class="article-header">
+      <div>
+        <h3 class="article-title">${article.titleCN}</h3>
+        <div class="article-title-en">${article.title}</div>
+      </div>
+    </div>
+
+    <div class="article-meta">
+      <span class="article-source">${article.source}</span>
+      <span class="article-date">${article.publishDate}</span>
+    </div>
+
+    <div class="article-content">
+      ${article.summaryCN}
+    </div>
+
+    ${brandsHTML ? `<div class="article-brands">${brandsHTML}</div>` : ''}
+
+    <div class="article-footer">
+      ${tagsHTML}
+      <a href="${article.link}" class="article-link" target="_blank" rel="noopener">
+        阅读原文 →
+      </a>
+    </div>
+  </article>
+`;
+}
+
+/**
+ * 生成页脚
+ */
+function generateFooter(digest: MonthlyDigest): string {
+  return `
+  <footer class="footer">
+    <div class="footer-content">
+      <p>本简报内容来源于国际权威时尚媒体，包括Business of Fashion、Vogue Runway、WWD等。</p>
+      <p>所有翻译均保留专业术语，确保准确性。内容仅供个人学习参考。</p>
+    </div>
+    <div class="footer-credits">
+      <p>Generated with Claude Code via Happy</p>
+      <p>https://github.com/ruvnet/claude-flow</p>
+      <p>${new Date().toISOString()}</p>
+    </div>
+  </footer>
+`;
+}
