@@ -438,7 +438,6 @@ function generateHeroSection(digest: MonthlyDigest): string {
     <div class="hero-tagline">聚焦高定品牌 · 深度行业洞察</div>
     <div class="hero-description">
       本期精选6大核心分类，覆盖高级定制、时装屋传承、市场动态、创意力量、工艺创新与趋势情报。
-      每篇内容50-100字，数据支撑，观点独立。
     </div>
   </section>
 `;
@@ -509,19 +508,45 @@ function generateArticleCard(article: Article, category: any): string {
     ? `<div class="article-tags">${article.tags.map(tag => `<span>#${tag}</span>`).join('')}</div>`
     : '';
 
-  // 为每篇文章添加时尚配图
-  const fashionImages = [
-    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80', // Fashion runway
-    'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80', // Fashion model
-    'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&q=80', // Fashion design
-    'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&q=80', // Luxury fashion
-    'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&q=80', // Fashion photography
-    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80'  // Fashion week
-  ];
-  const imageIndex = Math.abs(article.titleCN.split('').reduce((acc, char, idx) => {
-    return acc + char.charCodeAt(0);
-  }, 0)) % fashionImages.length;
-  const imageUrl = fashionImages[imageIndex];
+  // 为每篇文章添加相关的独特配图
+  const fashionImagesByCategory = {
+    'haute-couture': [
+      'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80', // High fashion runway
+      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80', // Couture details
+      'https://images.unsplash.com/photo-1509631234567-abcdef123456?w=800&q=80'  // Fashion show
+    ],
+    'maison-heritage': [
+      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80', // Luxury bag
+      'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=80', // Leather craftsmanship
+      'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&q=80'  // Heritage brand
+    ],
+    'market-analysis': [
+      'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?w=800&q=80', // Luxury retail
+      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80', // Shopping
+      'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&q=80'  // Fashion business
+    ],
+    'creative-force': [
+      'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&q=80', // Designer at work
+      'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&q=80', // Creative process
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&q=80'  // Fashion design sketch
+    ],
+    'craft-innovation': [
+      'https://images.unsplash.com/photo-1558171813-123456789abc?w=800&q=80', // Sustainable fashion
+      'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&q=80', // Material innovation
+      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&q=80'  // Craftsmanship
+    ],
+    'trend-intelligence': [
+      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80', // Fashion street style
+      'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&q=80', // Trend forecasting
+      'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80'  // Fashion lifestyle
+    ]
+  };
+
+  // 根据文章分类选择图片，使用标题hash确保同一分类内的文章也有不同图片
+  const categoryImages = fashionImagesByCategory[article.category] || fashionImagesByCategory['haute-couture'];
+  const imageHash = article.titleCN.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const imageIndex = imageHash % categoryImages.length;
+  const imageUrl = categoryImages[imageIndex];
 
   return `
   <article class="article-card">
