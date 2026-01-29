@@ -40,7 +40,7 @@ export function generatePremiumHTML(digest: MonthlyDigest): string {
  */
 function generateCSS(): string {
   return `
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
 :root {
   --primary: ${FASHION_COLORS.primary};
@@ -84,29 +84,32 @@ body {
 }
 
 .header h1 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Noto Serif SC', serif;
   font-size: 2.8rem;
-  font-weight: 700;
+  font-weight: 900;
   margin-bottom: 0.8rem;
-  letter-spacing: -0.5px;
+  letter-spacing: 2px;
   line-height: 1.2;
+  font-feature-settings: 'palt' 1;
 }
 
 .header .subtitle {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 300;
-  letter-spacing: 2px;
+  font-family: 'Bodoni Moda', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 4px;
   text-transform: uppercase;
-  opacity: 0.85;
+  opacity: 0.9;
+  font-style: italic;
 }
 
 .header .date {
   margin-top: 1.5rem;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.85rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
   opacity: 0.7;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  font-weight: 400;
 }
 
 /* ============ HERO ============ */
@@ -526,9 +529,9 @@ function generateArticleCard(article: Article, category: any): string {
       'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&q=80'  // Business fashion
     ],
     'creative-force': [
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&q=80', // Fashion designer portrait
       'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&q=80', // Design creative workspace
-      'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&q=80'  // Fashion design studio
+      'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=800&q=80', // Fashion sketch/drawings
+      'https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?w=800&q=80'  // Atelier work table
     ],
     'craft-innovation': [
       'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&q=80', // Hand craftsmanship
