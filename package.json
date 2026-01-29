@@ -1,0 +1,39 @@
+{
+  "name": "fashion-luxury-digest",
+  "version": "1.0.0",
+  "description": "高级时尚品牌智能简报系统 - 聚焦高定品牌与奢侈时装屋",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "generate": "tsx src/index.ts",
+    "generate:february": "tsx src/index.ts --month 2026-02",
+    "generate:march": "tsx src/index.ts --month 2026-03",
+    "dev": "tsx watch src/index.ts",
+    "test": "tsx src/test.ts",
+    "classify": "tsx src/utils/classifier.ts",
+    "serve": "node server.js",
+    "start": "npm run serve"
+  },
+  "keywords": [
+    "fashion",
+    "luxury",
+    "haute-couture",
+    "digest",
+    "aggregator",
+    "translation",
+    "high-fashion"
+  ],
+  "author": "Fashion Digest Team",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.3.1",
+    "openai": "^4.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  }
+}
