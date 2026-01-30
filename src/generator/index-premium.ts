@@ -5,6 +5,7 @@
 import { MonthlyDigest, Article } from '../types/index.js';
 import { generatePremiumHTML } from './template-premium.js';
 import { MARCH_2026_PREMIUM_ARTICLES, MARCH_2026_STATS } from './articles-premium.js';
+import { APRIL_2026_PREMIUM_ARTICLES, APRIL_2026_STATS } from './articles-april.js';
 import { getEnabledPremiumCategories } from '../config/categories-premium.js';
 
 export class PremiumDigestGenerator {
@@ -19,9 +20,12 @@ export class PremiumDigestGenerator {
    */
   async generate(): Promise<MonthlyDigest> {
     const articles = this.getArticles();
+    // 确定期号
+    const issueNumber = this.month === '2026-03' ? 1 : 2;
+
     const digest: MonthlyDigest = {
-      titleCN: '时尚简报·第1期',
-      subtitle: 'Luxury Fashion Digest',
+      titleCN: `时尚简报·第${issueNumber}期`,
+      subtitle: 'Luxury Fashion Digest - 霖霖子时尚工作室',
       date: new Date().toISOString().split('T')[0],
       month: this.month,
       articles: articles,
@@ -44,12 +48,16 @@ export class PremiumDigestGenerator {
    */
   private getArticles(): Article[] {
     // 根据月份返回对应的样本数据
+    if (this.month === '2026-04') {
+      return APRIL_2026_PREMIUM_ARTICLES;
+    }
+
     if (this.month === '2026-03') {
       return MARCH_2026_PREMIUM_ARTICLES;
     }
 
-    // 默认返回3月数据
-    return MARCH_2026_PREMIUM_ARTICLES;
+    // 默认返回4月数据（最新）
+    return APRIL_2026_PREMIUM_ARTICLES;
   }
 
   /**
